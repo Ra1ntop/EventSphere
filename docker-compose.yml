@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: ./ApiGateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - event-service
+
+  event-service:
+    build:
+      context: ./EventService
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+volumes:
+  pgdata:

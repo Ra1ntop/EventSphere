@@ -8,6 +8,8 @@ services:
       - "8080:8080"
     depends_on:
       - event-service
+      - notification-service
+      - user-service
 
   event-service:
     build:
@@ -17,6 +19,21 @@ services:
     depends_on:
       - postgres
 
+  notification-service:
+    build:
+      context: ./EventService
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+
+  user-service:
+    build:
+      context: ./EventService
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres
   postgres:
     image: postgres:15
     container_name: postgres

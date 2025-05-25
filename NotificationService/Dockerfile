@@ -1,4 +1,4 @@
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY build/libs/ApiGateway-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+COPY build/libs/NotificationService-0.0.1-SNAPSHOT.jar NotificationService.jar
+ENTRYPOINT ["java", "-jar", "NotificationService.jar"]

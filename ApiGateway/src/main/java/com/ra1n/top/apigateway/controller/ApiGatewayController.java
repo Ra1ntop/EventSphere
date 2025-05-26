@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 /**
  * @author Travkin Andrii
  * @version 18.05.2025
@@ -19,16 +21,34 @@ import org.springframework.web.client.RestTemplate;
 public class ApiGatewayController {
     private final RestTemplate restTemplate;
     private final String eventServiceUrl;
+    private final String userServiceUrl;
 
     public ApiGatewayController(RestTemplate restTemplate,
-                                @Value("${event-service.url}") String eventServiceUrl) {
+                                @Value("${event-service.url}") String eventServiceUrl,
+                                @Value("${user-service.url}") String userServiceUrl) {
         this.restTemplate = restTemplate;
+        this.userServiceUrl = userServiceUrl;
         this.eventServiceUrl = eventServiceUrl;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> proxyRegister(@RequestBody Map<String, String> body) {
+        System.out.println(body);
+        String url = userServiceUrl + "/api-v1/internal/register";
+        return restTemplate.postForEntity(url, body, String.class);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> proxyLogin(@RequestBody Map<String, String> body) {
+        System.out.println(body);
+        String url = userServiceUrl + "/api-v1/internal/login";
+        return restTemplate.postForEntity(url, body, String.class);
     }
 
     @GetMapping("/events")
     public ResponseEntity<?> proxyGetById(@RequestParam("id") Long id) {
         String url = eventServiceUrl + "/events?id=" + id;
+
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
     }

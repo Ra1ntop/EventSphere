@@ -21,7 +21,7 @@ services:
 
   notification-service:
     build:
-      context: ./EventService
+      context: ./NotificationService
     ports:
       - "8082:8082"
     depends_on:
@@ -29,7 +29,7 @@ services:
 
   user-service:
     build:
-      context: ./EventService
+      context: ./UserService
     ports:
       - "8083:8083"
     depends_on:

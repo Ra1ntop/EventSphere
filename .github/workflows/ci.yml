@@ -37,35 +37,28 @@ jobs:
       - name: Install Docker Compose
         run: |
           sudo apt-get update
-          sudo apt-get install docker-compose -y
+          sudo apt-get install -y docker-compose
 
       - name: Build Docker containers
-        run: |
-          docker-compose build
+        run: docker-compose build
 
       - name: Run Docker containers
-        run: |
-          docker-compose up -d
+        run: docker-compose up -d
 
       - name: Wait for services to be healthy
-        run: |
-          sleep 25
+        run: sleep 25
 
       - name:
           Run tests and Checkstyle: EventService
-        run: |
-          docker-compose exec -T event-service ./gradlew checkstyleMain checkstyleTest test
+        run: docker-compose exec -T event-service ./gradlew checkstyleMain checkstyleTest test
 
       - name:
           Run tests and Checkstyle: NotificationService
-        run: |
-          docker-compose exec -T notification-service ./gradlew checkstyleMain checkstyleTest test
+        run: docker-compose exec -T notification-service ./gradlew checkstyleMain checkstyleTest test
 
       - name:
           Run tests and Checkstyle: UserService
-        run: |
-          docker-compose exec -T user-service ./gradlew checkstyleMain checkstyleTest test
+        run: docker-compose exec -T user-service ./gradlew checkstyleMain checkstyleTest test
 
       - name: Tear down containers
-        run: |
-          docker-compose down
+        run: docker-compose down

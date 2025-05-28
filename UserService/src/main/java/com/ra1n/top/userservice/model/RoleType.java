@@ -5,5 +5,5 @@ package com.ra1n.top.userservice.model;
  * @version 25.05.2025
  */
 public enum RoleType {
-    ADMIN, USER
+    ADMIN, CLIENT
 }

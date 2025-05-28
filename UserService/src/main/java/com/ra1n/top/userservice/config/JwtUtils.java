@@ -1,7 +1,6 @@
 package com.ra1n.top.userservice.config;
 
-import com.ra1n.top.userservice.model.User;
-import io.jsonwebtoken.Claims;
+import com.ra1n.top.userservice.model.AbstractUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
+import static com.ra1n.top.userservice.config.JwtService.CLAIM_ROLES;
+
 /**
  * @author Travkin Andrii
  * @version 25.05.2025
@@ -21,21 +22,17 @@ import java.util.List;
 public class JwtUtils {
     @Value("${jwt.secret}")
     private String jwtSecret;
+    @Value("${jwt.expiration}")
+    private Long expiration;
 
-    public String generateToken(User user) {
+    public String generateToken(AbstractUser user) {
         return Jwts.builder()
                 .setSubject(user.getId())
-                .claim("roles", List.of(user.getRole()))
+                .claim(CLAIM_ROLES, List.of(user.getRole()))
                 .setIssuedAt(new Date())
-                .setExpiration(Date.from(Instant.now().plus(7, ChronoUnit.DAYS)))
+                .setExpiration(Date.from(Instant.now().plus(expiration, ChronoUnit.DAYS)))
                 .signWith(SignatureAlgorithm.HS256, jwtSecret.getBytes(StandardCharsets.UTF_8))
                 .compact();
     }
 
-    public Claims validateToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret.getBytes(StandardCharsets.UTF_8))
-                .parseClaimsJws(token)
-                .getBody();
-    }
 }

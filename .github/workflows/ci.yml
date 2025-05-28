@@ -48,13 +48,18 @@ jobs:
       - name: Wait for services to be healthy
         run: sleep 25
 
-      - name: Run tests and Checkstyle: EventService
-        run: docker-compose exec -T event-service ./gradlew checkstyleMain checkstyleTest test
+      - name:
+          Run tests and Checkstyle: EventService
+        run: |
+          docker-compose exec -T event-service ./gradlew checkstyleMain checkstyleTest test
 
-      - name: Run tests and Checkstyle: NotificationService
+
+      - name:
+          Run tests and Checkstyle: NotificationService
         run: docker-compose exec -T notification-service ./gradlew checkstyleMain checkstyleTest test
 
-      - name: Run tests and Checkstyle: UserService
+      - name:
+          Run tests and Checkstyle: UserService
         run: docker-compose exec -T user-service ./gradlew checkstyleMain checkstyleTest test
 
       - name: Tear down containers

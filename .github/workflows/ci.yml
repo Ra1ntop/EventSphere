@@ -1,0 +1,64 @@
+name: Java CI with Docker and Checkstyle
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-checkstyle:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose -y
+
+      - name: Build Docker containers
+        run: docker-compose build
+
+      - name: Run Docker containers
+        run: docker-compose up -d
+
+      - name: Wait for services to be healthy
+        run: sleep 25
+
+      - name:
+          Run tests and Checkstyle: EventService
+        run: docker-compose exec -T event-service ./gradlew checkstyleMain checkstyleTest test
+
+      - name:
+          Run tests and Checkstyle: NotificationService
+        run: docker-compose exec -T notification-service ./gradlew checkstyleMain checkstyleTest test
+
+      - name:
+          Run tests and Checkstyle: UserService
+        run: docker-compose exec -T user-service ./gradlew checkstyleMain checkstyleTest test
+
+      - name: Tear down containers
+        run: docker-compose down

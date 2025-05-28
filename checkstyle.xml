@@ -26,4 +26,5 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
     </module>
+
 </module>

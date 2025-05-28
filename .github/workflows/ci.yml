@@ -39,6 +39,26 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
+      - name: Build ApiGateway JAR
+        run: |
+          cd ApiGateway
+          ./gradlew build
+
+      - name: Build EventService JAR
+        run: |
+          cd EventService
+          ./gradlew build
+
+      - name: Build NotificationService JAR
+        run: |
+          cd NotificationService
+          ./gradlew build
+
+      - name: Build UserService JAR
+        run: |
+          cd UserService
+          ./gradlew build
+
       - name: Build Docker containers
         run: docker-compose build
 

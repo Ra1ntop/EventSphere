@@ -81,6 +81,16 @@ jobs:
             sleep 2
           done
 
+      - name: Debug - Show UserService configuration
+        run: |
+          docker compose exec -T user-service cat src/main/resources/application.properties || true
+          docker compose exec -T user-service cat src/test/resources/application.properties || true
+
+      - name: Debug - Check PostgreSQL connectivity
+        run: |
+          docker compose exec -T user-service ping -c 3 postgres || true
+          docker compose exec -T user-service nc -zv postgres 5432 || true
+
       - name: Run tests and Checkstyle - EventService
         run: |
           docker compose exec -T event-service ./gradlew checkstyleMain checkstyleTest test
@@ -92,6 +102,16 @@ jobs:
       - name: Run tests and Checkstyle - UserService
         run: |
           docker compose exec -T user-service ./gradlew checkstyleMain checkstyleTest test
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            UserService/build/reports/tests/test/
+            EventService/build/reports/tests/test/
+            NotificationService/build/reports/tests/test/
 
       - name: Tear down containers
         run: docker compose down

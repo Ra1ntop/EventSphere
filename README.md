@@ -40,8 +40,7 @@
 - 🤖 **CI/CD Ready**: Automated builds and tests with GitHub Actions.
 
 > **Progress**:  
-> ![Progress](https://progress-bar.dev/85/?title=Project%20Completion&width=200)
-
+> In developmnet
 ---
 
 ## 🧱 Architecture
@@ -84,13 +83,12 @@ EventSphere leverages a **microservices architecture** with services communicati
 ```
 
 ### 🛠️ Microservices
-| Service              | Description                                                                 |
-|----------------------|-----------------------------------------------------------------------------|
-| **API Gateway**      | Routes requests, handles JWT authentication, and exposes Swagger UI.         |
-| **User Service**     | Manages user registration, profiles, and authentication.                    |
-| **Auth Service**     | Handles Google OAuth2 and issues JWT tokens.                                |
-| **Event Service**    | CRUD operations for events, with Redis caching for performance.             |
-| **Registration Service** | Manages event registrations and publishes events to Kafka.                |
+
+| Service                  | Description                                                                          |
+|--------------------------|--------------------------------------------------------------------------------------|
+| **API Gateway**          | Routes requests, handles JWT authentication, and exposes Swagger UI.                 |
+| **User Service**         | Manages user registration, profiles, and authentication.                             |
+| **Event Service**        | CRUD operations for events, with Redis caching for performance.                      |
 | **Notification Service** | Consumes Kafka events, sends Telegram notifications, and syncs with Google Calendar. |
 
 ---
@@ -268,7 +266,7 @@ EventSphere/
 
 ## 🤝 Contributing
 
-We welcome contributions! Follow these steps:
+Welcome contributions! Follow these steps:
 1. Fork the repository.
 2. Create a feature branch: `git checkout -b feature/awesome-feature`.
 3. Commit your changes: `git commit -m 'Add awesome feature'`.
@@ -276,13 +274,6 @@ We welcome contributions! Follow these steps:
 5. Open a Pull Request.
 
 ---
-
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 ## 🌟 Why This Project Stands Out
 
 EventSphere showcases:

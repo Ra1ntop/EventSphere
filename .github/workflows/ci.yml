@@ -74,34 +74,6 @@ jobs:
       - name: Run Docker containers
         run: docker compose up -d
 
-      - name: Wait for PostgreSQL to be healthy
-        run: |
-          until docker compose exec -T postgres pg_isready -U postgres; do
-            echo "Waiting for PostgreSQL..."
-            sleep 2
-          done
-          docker compose ps
-
-      - name: Debug - Show configuration files
-        run: |
-          echo "UserService configuration:"
-          docker compose exec -T user-service cat src/main/resources/application.properties || true
-          docker compose exec -T user-service cat src/test/resources/application.properties || true
-          echo "EventService configuration:"
-          docker compose exec -T event-service cat src/main/resources/application.properties || true
-          echo "NotificationService configuration:"
-          docker compose exec -T notification-service cat src/main/resources/application.properties || true
-
-      - name: Debug - Check PostgreSQL connectivity
-        run: |
-          echo "Docker network info:"
-          docker compose exec -T user-service ip addr show || true
-          docker compose exec -T user-service cat /etc/hosts || true
-          docker compose exec -T user-service cat /etc/resolv.conf || true
-          echo "Checking connectivity from user-service to postgres:"
-          docker compose exec -T user-service ping -c 3 postgres || true
-          docker compose exec -T user-service nc -zv postgres 5432 || true
-
       - name: Run tests and Checkstyle - EventService
         run: |
           docker compose exec -T event-service ./gradlew checkstyleMain checkstyleTest test --info --stacktrace

@@ -8,6 +8,8 @@ import com.ra1n.top.eventservice.service.EventService;
 import com.ra1n.top.eventservice.service.mapper.EventMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * @author Travkin Andrii
@@ -31,5 +33,25 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponseDto getEvent(Long id) {
         return mapper.toDto(eventRepository.getEventById(id));
+    }
+
+    @Override
+    public Event updateEvent(Long id, EventRequestDto eventRequest) {
+        Event existing = eventRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Event not found with id " + id));
+        existing.setClientId(eventRequest.getClientId());
+        existing.setTitle(eventRequest.getTitle());
+        existing.setDescription(eventRequest.getDescription());
+        existing.setEventDate(eventRequest.getEventDate());
+        existing.setDuration(eventRequest.getDuration());
+        existing.setNotificationLeadTime(eventRequest.getNotificationLeadTime());
+        return eventRepository.save(existing);
+    }
+
+    @Override
+    public void deleteEvent(Long id) {
+        eventRepository.deleteById(id);
     }
 }

@@ -13,4 +13,8 @@ public interface EventService {
     Event createEvent(EventRequestDto event);
 
     EventResponseDto getEvent(Long id);
+
+    Event updateEvent(Long id, EventRequestDto event);
+
+    void deleteEvent(Long id);
 }

@@ -118,9 +118,10 @@ EventSphere leverages a **microservices architecture** with services communicati
    TELEGRAM_BOT_TOKEN=your-telegram-bot-token
    POSTGRES_USER=postgres
    POSTGRES_PASSWORD=postgres
+   KAFKA_BOOTSTRAP_SERVERS=kafka:9092
    ```
 
-3. **Run with Docker Compose**:
+3. **Run with Docker Compose (starts all services, including Zookeeper & Kafka)**:
    ```bash
    docker-compose up --build
    ```
@@ -169,19 +170,77 @@ Authorization: Bearer <JWT_TOKEN>
 Content-Type: application/json
 
 {
+  "clientId": "12345",
   "title": "Tech Meetup",
   "description": "A meetup for tech enthusiasts",
-  "eventDate": "2025-06-01T18:00:00Z"
+  "eventDate": "2025-06-01T18:00:00Z",
+  "duration": "PT2H",
+  "notificationLeadTime": "PT15M"
 }
 ```
 
 **Response**:
 ```json
 {
-  "eventId": "67890",
+  "id": "67890",
+  "clientId": "12345",
   "title": "Tech Meetup",
-  "createdAt": "2025-05-18T16:33:00Z"
+  "description": "A meetup for tech enthusiasts",
+  "eventDate": "2025-06-01T18:00:00Z",
+  "duration": "PT2H",
+  "notificationLeadTime": "PT15M",
+  "createdAt": "2025-05-18T16:33:00Z",
+  "updatedAt": "2025-05-18T16:33:00Z"
 }
+```
+
+</details>
+
+<details>
+<summary>📌 <strong>Update an Event</strong></summary>
+
+```http
+PUT /events?id=67890
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+{
+  "clientId": "12345",
+  "title": "Updated Title",
+  "description": "Updated description",
+  "eventDate": "2025-06-01T20:00:00Z",
+  "duration": "PT2H",
+  "notificationLeadTime": "PT15M"
+}
+```
+
+**Response**:
+```json
+{
+  "id": "67890",
+  "clientId": "12345",
+  "title": "Updated Title",
+  "description": "Updated description",
+  "eventDate": "2025-06-01T20:00:00Z",
+  "duration": "PT2H",
+  "notificationLeadTime": "PT15M",
+  "createdAt": "2025-05-18T16:33:00Z",
+  "updatedAt": "2025-05-20T10:00:00Z"
+}
+```
+</details>
+
+<details>
+<summary>📌 <strong>Delete an Event</strong></summary>
+
+```http
+DELETE /events?id=67890
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Response**:
+```
+204 No Content
 ```
 </details>
 
